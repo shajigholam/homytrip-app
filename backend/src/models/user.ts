@@ -18,3 +18,6 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model<UserType>("User", userSchema);
 
 export default User;
+
+//my notes:
+//"User" parameter is the name of the collection in MongoDB. By convention, Mongoose will pluralize this (so it will look for a "users" collection in MongoDB).
