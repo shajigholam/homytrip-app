@@ -1,15 +1,30 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
-import Layout from "./layouts/Layout"
+import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
+import Layout from "./layouts/Layout";
+import Register from "./pages/Register";
 
 function App() {
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout><p>home page</p></Layout>}></Route>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <p>home page</p>
+            </Layout>
+          }
+        ></Route>
+        <Route
+          path="/register"
+          element={
+            <Layout>
+              <Register />
+            </Layout>
+          }
+        ></Route>
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App;
