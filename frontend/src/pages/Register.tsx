@@ -1,4 +1,6 @@
+import {useMutation} from "@tanstack/react-query";
 import {useForm} from "react-hook-form";
+import * as apiClient from "../api-client";
 
 export type RegisterFormData = {
   firstName: string;
@@ -17,7 +19,19 @@ const Register = () => {
   } = useForm<RegisterFormData>();
 
   const onSubmit = handleSubmit(data => {
-    console.log(data);
+    //console.log(data);
+    mutation.mutate(data);
+  });
+
+  // "mutation function" — it’s the actual function that performs API request. (This tells React Query that when someone calls mutate(), run this function to POST the data.)
+  const mutation = useMutation({
+    mutationFn: apiClient.register, // function that POSTs form data
+    onSuccess: () => {
+      console.log("registration successful");
+    },
+    onError: (error: Error) => {
+      console.log(error.message);
+    },
   });
 
   return (
@@ -105,3 +119,9 @@ const Register = () => {
 };
 
 export default Register;
+
+/*
+In React Query (@tanstack/react-query), useMutation is a hook for handling "write" operations, like:
+Creating a user, Updating a profile, Deleting a post, Sending a form 
+It’s different from useQuery, which is used to fetch data ("read" operations). 
+*/

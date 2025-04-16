@@ -1,10 +1,22 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
-createRoot(document.getElementById('root')!).render(
+// react query continue reloading the page if there is an error which is expensive so we set it to zero
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </StrictMode>
+);
