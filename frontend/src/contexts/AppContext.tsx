@@ -1,6 +1,7 @@
 // define a type for our context that holds all the properties that we are going to expost to our components
 
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
+import Toast from "../components/Toast";
 
 type ToastMessage = {
   message: string;
@@ -16,14 +17,22 @@ const AppContext = React.createContext<AppContext | undefined>(undefined);
 
 // Create the provider component to Provide the context value
 export const AppContextProvider = ({children}: {children: React.ReactNode}) => {
+  const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
   return (
     <AppContext.Provider
       value={{
         showToast: toastMsg => {
-          console.log(toastMsg);
+          setToast(toastMsg);
         },
       }}
     >
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(undefined)}
+        />
+      )}
       {children}
     </AppContext.Provider>
   );
