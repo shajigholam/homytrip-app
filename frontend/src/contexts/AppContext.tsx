@@ -2,14 +2,18 @@
 
 import React, {useContext, useState} from "react";
 import Toast from "../components/Toast";
+import {useQuery} from "@tanstack/react-query";
+import * as apiClient from "../api-client";
 
 type ToastMessage = {
   message: string;
   type: "SUCCESS" | "ERROR";
 };
 
+// different contexts that we are exposing to the app
 type AppContext = {
   showToast: (toastMessage: ToastMessage) => void;
+  isLoggedIn: boolean;
 };
 
 // Create the context
@@ -18,12 +22,19 @@ const AppContext = React.createContext<AppContext | undefined>(undefined);
 // Create the provider component to Provide the context value
 export const AppContextProvider = ({children}: {children: React.ReactNode}) => {
   const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
+  const {isError} = useQuery({
+    queryKey: ["validateToken"],
+    queryFn: apiClient.validateToken,
+    retry: false,
+  });
+
   return (
     <AppContext.Provider
       value={{
         showToast: toastMsg => {
           setToast(toastMsg);
         },
+        isLoggedIn: !isError,
       }}
     >
       {toast && (

@@ -3,6 +3,7 @@ import User from "../models/user";
 import {check, validationResult} from "express-validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.post(
         process.env.JWT_SECRET_KEY as string,
         {expiresIn: "1d"}
       );
-      // set token as cookie (with httpOnly, we don't let JS to access the token and log it to the console)
+      // server sets token as cookie (with httpOnly, we don't let JS to access the token and log it to the console)
       res.cookie("auth_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -51,5 +52,9 @@ router.post(
     }
   }
 );
+
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  res.status(200).send({userId: req.userId});
+});
 
 export default router;
