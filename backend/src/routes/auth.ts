@@ -58,3 +58,26 @@ router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
 });
 
 export default router;
+
+/**
+[ AppContext / App.tsx ]
+     ↓
+useQuery(validateToken)
+     ↓
+[ api-client.ts ]
+     ↓
+fetch /api/auth/validate-token
+     ↓
+[ Express route: auth.ts ]
+     ↓
+verifyToken middleware (middleware/auth.ts)
+     ↓
+If valid, attaches userId and continues
+     ↓
+Response sent { userId }
+     ↓
+useQuery receives data / sets error
+     ↓
+Context sets isLoggedIn
+
+ */

@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import jwt, {JwtPayload} from "jsonwebtoken";
 
+//TypeScript, when I'm using express.Request, just know it might have a userId property too.
 declare global {
   namespace Express {
     interface Request {
@@ -18,7 +19,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
-    req.userId = (decoded as JwtPayload).userId;
+    req.userId = (decoded as JwtPayload).userId; // decoded is: string | JwtPayload here is JwtPayload coz before we did jwt.sign({ userId: "abc123" },
     next();
   } catch (error) {
     return res.status(401).json({message: "unauthorized"});
