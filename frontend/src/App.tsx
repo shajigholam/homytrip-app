@@ -1,6 +1,7 @@
 import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
 import Layout from "./layouts/Layout";
 import Register from "./pages/Register";
+import SignIn from "./pages/SignIn";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
               <p>home page</p>
             </Layout>
           }
-        ></Route>
+        />
         <Route
           path="/register"
           element={
@@ -21,7 +22,15 @@ function App() {
               <Register />
             </Layout>
           }
-        ></Route>
+        />
+        <Route
+          path="/sign-in"
+          element={
+            <Layout>
+              <SignIn />
+            </Layout>
+          }
+        />
       </Routes>
     </Router>
   );
