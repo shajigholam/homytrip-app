@@ -1,12 +1,16 @@
 import {useMutation} from "@tanstack/react-query";
 import {useForm} from "react-hook-form";
 import * as apiClient from "../api-client";
+import {useAppContext} from "../contexts/AppContext";
+import {useNavigate} from "react-router-dom";
 
 export type SignInFormData = {
   email: string;
   password: string;
 };
 const SignIn = () => {
+  const {showToast} = useAppContext();
+  const navigate = useNavigate();
   const {
     register,
     formState: {errors},
@@ -16,9 +20,13 @@ const SignIn = () => {
   const mutation = useMutation({
     mutationFn: apiClient.signIn,
     onSuccess: async () => {
+      showToast({message: "Sign in Successful!", type: "SUCCESS"});
+      navigate("/");
       console.log("user logged in");
     },
-    onError: async (error: Error) => {},
+    onError: async (error: Error) => {
+      showToast({message: error.message, type: "ERROR"});
+    },
   });
 
   const onSubmit = handleSubmit(data => {
