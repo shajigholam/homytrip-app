@@ -1,4 +1,4 @@
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useForm} from "react-hook-form";
 import * as apiClient from "../api-client";
 import {useAppContext} from "../contexts/AppContext";
@@ -15,6 +15,7 @@ export type RegisterFormData = {
 const Register = () => {
   const {showToast} = useAppContext();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -31,8 +32,9 @@ const Register = () => {
   // "mutation function" — it’s the actual function that performs API request. (This tells React Query that when someone calls mutate(), run this function to POST the data.)
   const mutation = useMutation({
     mutationFn: apiClient.register, // function that POSTs form data
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast({message: "Registration success", type: "SUCCESS"});
+      await queryClient.invalidateQueries({queryKey: ["validateToken"]});
       navigate("/");
       //console.log("registration successful");
     },

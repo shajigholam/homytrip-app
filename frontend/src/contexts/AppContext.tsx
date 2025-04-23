@@ -22,7 +22,7 @@ const AppContext = React.createContext<AppContext | undefined>(undefined);
 // Create the provider component to Provide the context value
 export const AppContextProvider = ({children}: {children: React.ReactNode}) => {
   const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
-  // this runs whenever the page rerenders(like when we refresh or chage the route)
+  // This runs when the component mounts and the query is stale, or when manually invalidated, or on page refresh
   const {isError} = useQuery({
     queryKey: ["validateToken"],
     queryFn: apiClient.validateToken,
