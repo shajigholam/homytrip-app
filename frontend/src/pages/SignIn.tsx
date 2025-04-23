@@ -77,7 +77,7 @@ const SignIn = () => {
           type="submit"
           className="bg-indigo-600 text-white p-2 font-bold hover:bg-indigo-500 text-xl"
         >
-          Sign in
+          Login
         </button>
       </span>
     </form>
