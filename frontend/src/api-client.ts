@@ -1,7 +1,8 @@
 import {RegisterFormData} from "./pages/Register";
 import {SignInFormData} from "./pages/SignIn";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// add empty string coz in production we don't have a seperate URL for frontend
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const register = async (formData: RegisterFormData) => {
   // api call(post req) to register endpoint
