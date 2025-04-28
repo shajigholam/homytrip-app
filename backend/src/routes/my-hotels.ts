@@ -1,10 +1,13 @@
 import express, {Request, Response} from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
+import Hotel, {HotelType} from "../models/hotel";
+import verifyToken from "../middleware/auth";
+import {body} from "express-validator";
 
 const router = express.Router();
 
-//upload files to RAM, without writing them to the server's disk
+//upload files to RAM, without writing them to the server's disk(multer helps parse that incoming file and makes it accessible in your req (request) object.)
 const storage = multer.memoryStorage();
 // initialize multer and then use it as a middleware
 const upload = multer({
@@ -17,11 +20,28 @@ const upload = multer({
 // api/my-hotels
 router.post(
   "/",
+  verifyToken,
+  [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("city").notEmpty().withMessage("City is required"),
+    body("country").notEmpty().withMessage("Country is required"),
+    body("descreption").notEmpty().withMessage("Description is required"),
+    body("type").notEmpty().withMessage("Hotel type is required"),
+    body("pricePerNight")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Price per night is required and must be a number"),
+    body("facilities")
+      .notEmpty()
+      .isArray()
+      .withMessage("Facilities are required"),
+  ],
   upload.array("imageFiles", 6),
   async (req: Request, res: Response) => {
     try {
       const imageFiles = req.files as Express.Multer.File[];
-      const newHotel = req.body;
+      const newHotel: HotelType = req.body;
+
       //1. upload images to cloudinary
       const uploadPromises = imageFiles.map(async image => {
         const b64 = Buffer.from(image.buffer).toString("base64");
@@ -29,16 +49,25 @@ router.post(
         const res = await cloudinary.v2.uploader.upload(dataURI);
         return res.url;
       });
-      //wait for all images to get uploaded
+      //wait for all images to get uploaded in cloudinary and receive the urls
       const imageUrls = await Promise.all(uploadPromises);
 
       //2. if upload was successful, add URLs to the new hotel
+      newHotel.imageUrls = imageUrls;
+      newHotel.lastUpdated = new Date();
+      newHotel.userId = req.userId; //***get the id attached to the req from the verifyToken
 
       //3. save the new hotel in our database
+      const hotel = new Hotel(newHotel);
+      await hotel.save();
+
       //4. return 201 status
+      res.status(201).send(hotel);
     } catch (error) {
       console.log("Error creating hotel: ", error);
       res.status(500).json({message: "something is wrong"});
     }
   }
 );
+
+export default router;
