@@ -28,3 +28,9 @@ const ManageHotelForm = () => {
 };
 
 export default ManageHotelForm;
+
+/**
+ * this form is bigger and i will split it into multiple components
+ * so instead of destructing useForm here and send the functions as props to every child component, we will use:
+ * FormProvider to make the form methods availlable through useFormContext
+ */
