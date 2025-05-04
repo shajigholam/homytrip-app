@@ -44,9 +44,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
 
 // because soemof our routes are behind some conditional logics and are not part of the static files
-app.get("*", (req: Request, res: Response) => {
+app.use((req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
+
 // start server
 app.listen(port, () => {
   console.log(`server is running on localhost: ${port}`);
