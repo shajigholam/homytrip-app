@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -36,13 +36,17 @@ app.use(
   })
 );
 
-// Serve frontend build folder from the backend
+// Serve frontend build folder from the backend(with bundling front and back, everything serves from the same server)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
 
+// because soemof our routes are behind some conditional logics and are not part of the static files
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
 // start server
 app.listen(port, () => {
   console.log(`server is running on localhost: ${port}`);
