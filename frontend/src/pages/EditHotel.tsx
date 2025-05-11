@@ -1,4 +1,4 @@
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import * as apiClient from "../api-client";
 import ManageHotelForm from "../forms/ManageHotelForm/ManageHotelForm";
@@ -13,7 +13,23 @@ const EditHotel = () => {
     enabled: !!hotelId,
   });
 
-  return <ManageHotelForm hotel={hotel} />;
+  const mutation = useMutation({
+    mutationFn: apiClient.updateMyHotelById,
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  const handleSave = (hotelFormData: FormData) => {
+    mutation.mutate(hotelFormData);
+  };
+
+  return (
+    <ManageHotelForm
+      hotel={hotel}
+      onSave={handleSave}
+      isLoading={mutation.isPending}
+    />
+  );
 };
 
 export default EditHotel;

@@ -25,7 +25,7 @@ export type HotelFormData = {
 type Props = {
   onSave: (hotelFormData: FormData) => void;
   isLoading: boolean;
-  hotel: HotelType;
+  hotel?: HotelType;
 };
 
 const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
@@ -40,6 +40,9 @@ const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
     console.log(formDataJson);
     //create a new formdata obj and call our API
     const formData = new FormData();
+    if (hotel) {
+      formData.append("hotelId", hotel._id);
+    }
     formData.append("name", formDataJson.name);
     formData.append("city", formDataJson.city);
     formData.append("country", formDataJson.country);
@@ -53,6 +56,12 @@ const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
     formDataJson.facilities.forEach((facility, index) => {
       formData.append(`facilities[${index}]`, facility);
     });
+
+    if (formDataJson.imageUrls) {
+      formDataJson.imageUrls.forEach((url, index) => {
+        formData.append(`imageUrls[${index}]`, url);
+      });
+    }
 
     // in the backend Multer will collect all files with the same field name (imageFiles) into an array.( upload.array("imageFiles") )
     Array.from(formDataJson.imageFiles).forEach(imageFile => {

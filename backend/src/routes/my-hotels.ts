@@ -114,6 +114,7 @@ router.put(
         ...(updatedHotel.imageUrls || []),
       ];
       await hotel.save();
+      res.status(201).json(hotel);
     } catch (error) {
       res.status(500).json({message: "something went wrong"});
     }
