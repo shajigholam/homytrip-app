@@ -1,6 +1,5 @@
 import {useFormContext} from "react-hook-form";
 import {HotelFormData} from "./ManageHotelForm";
-import React from "react";
 
 const ImagesSection = () => {
   const {
@@ -36,7 +35,7 @@ const ImagesSection = () => {
                   onClick={event => {
                     handleDelete(event, url);
                   }}
-                  className="absilute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 text-white"
+                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 text-white"
                 >
                   Delete
                 </button>
@@ -52,7 +51,7 @@ const ImagesSection = () => {
           {...register("imageFiles", {
             validate: imageFiles => {
               const totalLength =
-                imageFiles.length + (existingImageUrls?.length || 0);
+                imageFiles?.length + (existingImageUrls?.length || 0);
               if (totalLength === 0) {
                 return "At least one image should be added";
               }

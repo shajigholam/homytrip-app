@@ -2,9 +2,12 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import * as apiClient from "../api-client";
 import ManageHotelForm from "../forms/ManageHotelForm/ManageHotelForm";
+import {useAppContext} from "../contexts/AppContext";
 
 const EditHotel = () => {
   const {hotelId} = useParams();
+
+  const {showToast} = useAppContext();
 
   const {data: hotel} = useQuery({
     queryKey: ["fetchMyHotelById"],
@@ -15,8 +18,12 @@ const EditHotel = () => {
 
   const mutation = useMutation({
     mutationFn: apiClient.updateMyHotelById,
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: () => {
+      showToast({message: "Hotel Saved", type: "SUCCESS"});
+    },
+    onError: () => {
+      showToast({message: "Error saving hotel", type: "ERROR"});
+    },
   });
 
   const handleSave = (hotelFormData: FormData) => {

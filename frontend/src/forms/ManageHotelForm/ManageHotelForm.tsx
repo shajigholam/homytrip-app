@@ -64,9 +64,11 @@ const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
     }
 
     // in the backend Multer will collect all files with the same field name (imageFiles) into an array.( upload.array("imageFiles") )
-    Array.from(formDataJson.imageFiles).forEach(imageFile => {
-      formData.append("imageFiles", imageFile);
-    });
+    if (formDataJson.imageFiles && formDataJson.imageFiles.length > 0) {
+      Array.from(formDataJson.imageFiles).forEach(imageFile => {
+        formData.append("imageFiles", imageFile);
+      });
+    }
 
     onSave(formData);
   });

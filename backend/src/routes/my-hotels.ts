@@ -110,8 +110,8 @@ router.put(
       const updatedImageUrls = await uploadImages(files);
 
       hotel.imageUrls = [
-        ...updatedImageUrls,
-        ...(updatedHotel.imageUrls || []),
+        ...updatedImageUrls, // newly uploaded images
+        ...(updatedHotel.imageUrls || []), // previously uploaded images the user kept
       ];
       await hotel.save();
       res.status(201).json(hotel);
