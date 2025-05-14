@@ -112,3 +112,11 @@ export const updateMyHotelById = async (hotelFormData: FormData) => {
 
   return response.json();
 };
+
+export const fetchHotelById = async (hotelId: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/hotels/${hotelId}`);
+  if (!response.ok) {
+    throw new Error("Error fetching hotels");
+  }
+  return response.json();
+};
